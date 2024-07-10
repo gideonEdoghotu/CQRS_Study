@@ -1,4 +1,4 @@
-﻿using CWKSOCIAL.Domain.PostModel;
+﻿using CWKSOCIAL.Domain.Aggregates.PostAggregate;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CWKSOCIAL.API.Controllers.V1
