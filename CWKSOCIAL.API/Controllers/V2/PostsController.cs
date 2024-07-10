@@ -1,5 +1,4 @@
-﻿using CWKSOCIAL.Domain.Aggregates.PostAggregate;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ApiVersion = Microsoft.AspNetCore.Mvc.ApiVersion;
 
 namespace CWKSOCIAL.API.Controllers.V2
@@ -13,8 +12,7 @@ namespace CWKSOCIAL.API.Controllers.V2
         [Route("{id}")]
         public IActionResult GetById(Guid id)
         {
-            var post = new Post { Id = id, Text = "Hello universe" };
-            return Ok(post);
+            return Ok();
         }
     }
 }
