@@ -3,13 +3,13 @@
 namespace CWKSOCIAL.API.Controllers.V1
 {
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route(ApiRoutes.BaseRoute)]
     [ApiController]
     public class PostsController : Controller
     {
         //[MapToApiVersion("2.0")]
         [HttpGet]
-        [Route("{id}")]
+        [Route(ApiRoutes.Posts.IdRoute)]
         public IActionResult GetById(Guid id)
         {
             return Ok();
