@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
@@ -21,8 +23,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CWKSOCIAL.Application\CWKSOCIAL.Application.csproj" />
     <ProjectReference Include="..\CWKSOCIAL.Dal\CWKSOCIAL.Dal.csproj" />
     <ProjectReference Include="..\CWKSOCIAL.Domain\CWKSOCIAL.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Contracts\Posts\Responses\" />
+    <Folder Include="Contracts\Posts\Requests\" />
   </ItemGroup>
 
 </Project>
