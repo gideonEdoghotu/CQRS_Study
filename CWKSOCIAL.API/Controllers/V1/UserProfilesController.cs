@@ -11,7 +11,7 @@ namespace CWKSOCIAL.API.Controllers.V1
     [ApiVersion("1.0")]
     [Route(ApiRoutes.BaseRoute)]
     [ApiController]
-    public class UserProfilesController : Controller
+    public class UserProfilesController : BaseController
     {
         public UserProfilesController(IMediator mediator, IMapper mapper)
         {
@@ -46,6 +46,9 @@ namespace CWKSOCIAL.API.Controllers.V1
         {
             var query = new GetUserProfileById { Id = Guid.Parse(id) };
             var response = await _mediator.Send(query, cancellationToken);
+
+            if (response == null) return NotFound($"No user with profile ID {id} found");
+
             var userProfile = _mapper.Map<UserProfileResponse>(response);
             return Ok(userProfile);
         }
@@ -61,7 +64,11 @@ namespace CWKSOCIAL.API.Controllers.V1
             command.UserProfileId = Guid.Parse(id);
             var response = await _mediator.Send(command, cancellationToken);
 
-            return NoContent();
+            return response.IsError ? HandleErrorResponse(response.Errors) : NoContent();
+            //if (response.IsError)
+            //    return HandleErrorResponse(response.Errors);
+
+            //return NoContent();
         }
 
         [HttpDelete]

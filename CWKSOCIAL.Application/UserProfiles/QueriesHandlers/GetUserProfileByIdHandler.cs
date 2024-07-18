@@ -3,11 +3,6 @@ using CWKSOCIAL.Dal;
 using CWKSOCIAL.Domain.Aggregates.UserProfileAggregate;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CWKSOCIAL.Application.UserProfiles.QueriesHandlers
 {
