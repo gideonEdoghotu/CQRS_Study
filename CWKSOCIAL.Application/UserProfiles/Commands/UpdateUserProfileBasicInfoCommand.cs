@@ -1,14 +1,10 @@
-﻿using CWKSOCIAL.Domain.Aggregates.UserProfileAggregate;
+﻿using CWKSOCIAL.Application.Models;
+using CWKSOCIAL.Domain.Aggregates.UserProfileAggregate;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CWKSOCIAL.Application.UserProfiles.Commands
 {
-    public class UpdateUserProfileBasicInfoCommand : IRequest<Unit>
+    public class UpdateUserProfileBasicInfoCommand : IRequest<OperationResult<UserProfile>>
     {
         public Guid UserProfileId { get; set; }
         public string FirstName { get; set; }
