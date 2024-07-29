@@ -1,4 +1,5 @@
-﻿using CWKSOCIAL.Domain.Aggregates.UserProfileAggregate;
+﻿using CWKSOCIAL.Application.Models;
+using CWKSOCIAL.Domain.Aggregates.UserProfileAggregate;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CWKSOCIAL.Application.UserProfiles.Commands
 {
-    public class CreateUserCommand : IRequest<UserProfile>
+    public class CreateUserCommand : IRequest<OperationResult<UserProfile>>
     {
         public Guid UserProfileId { get; set; }
         public string FirstName { get; set; }

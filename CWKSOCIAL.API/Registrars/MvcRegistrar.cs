@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using CWKSOCIAL.API.Filters;
 
 namespace CWKSOCIAL.API.Registrars
 {
@@ -26,7 +27,11 @@ namespace CWKSOCIAL.API.Registrars
 
             builder.Services.AddEndpointsApiExplorer();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(config =>
+            {
+                //to make it globally available
+                config.Filters.Add(typeof(CwkSocialExceptionHandler));
+            });
         }
     }
 }
