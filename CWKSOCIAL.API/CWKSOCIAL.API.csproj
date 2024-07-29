@@ -28,9 +28,4 @@
     <ProjectReference Include="..\CWKSOCIAL.Domain\CWKSOCIAL.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contracts\Posts\Responses\" />
-    <Folder Include="Contracts\Posts\Requests\" />
-  </ItemGroup>
-
 </Project>

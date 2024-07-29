@@ -1,4 +1,6 @@
 ﻿using CWKSOCIAL.Domain.Aggregates.UserProfileAggregate;
+using CWKSOCIAL.Domain.Exceptions;
+using CWKSOCIAL.Domain.Validators.PostValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,21 +15,38 @@ namespace CWKSOCIAL.Domain.Aggregates.PostAggregate
         {
         }
 
+        /// <summary>
+        /// Creates a post comment
+        /// </summary>
+        /// <param name="id">The ID of the post to which the comment belongs</param>
+        /// <param name="text">Text content of the comment</param>
+        /// <param name="userProfileId">The ID of the user who created the comment</param>
+        /// <returns><see cref="PostComment"/></returns>
+        /// <exception cref="PostCommentNotValidException">Thrown if the data provided for the post comment
+        /// is not valid</exception>
         public static PostComment CreatePostComment(Guid id, string text, Guid userProfileId)
         {
-            // TODO: Add validation, error handling strategies, error notification strategies
-
-            return new PostComment()
+            var validator = new PostCommentValidator();
+            var objectToValidate = new PostComment
             {
-                Id = id,
+                PostId = id,
                 Text = text,
                 UserProfileId = userProfileId,
                 DateCreated = DateTime.UtcNow,
                 LastModified = DateTime.UtcNow
             };
+
+            var validationResult = validator.Validate(objectToValidate);
+
+            if (validationResult.IsValid) return objectToValidate;
+
+            var exception = new PostCommentNotValidException("Post comment is not valid");
+
+            validationResult.Errors.ForEach(vr => exception.ValidationErrors.Add(vr.ErrorMessage));
+            throw exception;
         }
 
-        public void UpdateComment(string newText)
+        public void UpdateCommentText(string newText)
         {
             Text = newText;
             LastModified = DateTime.UtcNow;

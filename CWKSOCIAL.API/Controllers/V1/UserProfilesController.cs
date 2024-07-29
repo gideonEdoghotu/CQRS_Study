@@ -14,12 +14,6 @@ namespace CWKSOCIAL.API.Controllers.V1
     [ApiController]
     public class UserProfilesController : BaseController
     {
-        public UserProfilesController(IMediator mediator, IMapper mapper)
-        {
-            _mediator = mediator;
-            _mapper = mapper;
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetAllProfiles(CancellationToken cancellationToken)
         {
@@ -43,13 +37,12 @@ namespace CWKSOCIAL.API.Controllers.V1
 
         [Route(ApiRoutes.UserProfiles.IdRoute)]
         [HttpGet]
-        //[ValidateGuid("id")]
+        [ValidateGuid("id")]
         public async Task<IActionResult> GetUserProfileById(string id, CancellationToken cancellationToken)
         {
             var query = new GetUserProfileById { Id = Guid.Parse(id) };
             var response = await _mediator.Send(query, cancellationToken);
 
-            //if (response == null) return NotFound($"No user with profile ID {id} found");
             if (response.IsError)
                 return HandleErrorResponse(response.Errors);
 
@@ -60,8 +53,7 @@ namespace CWKSOCIAL.API.Controllers.V1
         [HttpPatch]
         [Route(ApiRoutes.UserProfiles.IdRoute)]
         [ValidateModel]
-        //[ValidateModel]
-        //[ValidateGuid("id")]
+        [ValidateGuid("id")]
         public async Task<IActionResult> UpdateUserProfile(string id, UserProfileCreateUpdateCommand updatedProfile,
             CancellationToken cancellationToken)
         {
@@ -78,6 +70,7 @@ namespace CWKSOCIAL.API.Controllers.V1
 
         [HttpDelete]
         [Route(ApiRoutes.UserProfiles.IdRoute)]
+        [ValidateGuid("id")]
         public async Task<IActionResult> DeleteUserProfile(string id, UserProfileCreateUpdateCommand updatedProfile,
             CancellationToken cancellationToken)
         {
@@ -85,8 +78,5 @@ namespace CWKSOCIAL.API.Controllers.V1
             var response = await _mediator.Send(command);
             return response.IsError ? HandleErrorResponse(response.Errors) : NoContent();
         }
-
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
     }
 }

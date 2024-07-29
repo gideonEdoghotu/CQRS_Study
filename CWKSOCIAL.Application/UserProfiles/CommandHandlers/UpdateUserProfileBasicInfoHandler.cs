@@ -3,6 +3,7 @@ using CWKSOCIAL.Application.Models;
 using CWKSOCIAL.Application.UserProfiles.Commands;
 using CWKSOCIAL.Dal;
 using CWKSOCIAL.Domain.Aggregates.UserProfileAggregate;
+using CWKSOCIAL.Domain.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,18 +44,25 @@ namespace CWKSOCIAL.Application.UserProfiles.CommandHandlers
                 await _ctx.SaveChangesAsync(cancellationToken);
 
                 result.Payload = userProfile;
+                return result;
             }
+            catch (UserProfileNotValidException ex)
+            {
+                result.IsError = true;
+                foreach (var e in ex.ValidationErrors)
+                {
+                    var error = new Error { Code = Enums.ErrorCode.ValidationError, Message = $"{ex.Message}" };
+                    result.Errors.Add(error);
+                };
+
+                return result;
+            }
+
             catch (Exception e)
             {
-                var error = new Error { Code = ErrorCode.ServerError, Message = e.Message };
-                result.IsError = true;
-                result.Errors.Add(error);
+                var error = new Error { Code = Enums.ErrorCode.UnknownError, Message = e.Message };
+                return result;
             }
-
-
-
-            return result;
-            //return new Unit();
         }
     }
 }
