@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CWKSOCIAL.API.Contracts.UserProfile.Requests;
 using CWKSOCIAL.API.Contracts.UserProfile.Responses;
+using CWKSOCIAL.API.Filters;
 using CWKSOCIAL.Application.UserProfiles.Commands;
 using CWKSOCIAL.Application.UserProfiles.Queries;
 using MediatR;
@@ -24,19 +25,20 @@ namespace CWKSOCIAL.API.Controllers.V1
         {
             var query = new GetAllUserProfiles();
             var response = await _mediator.Send(query, cancellationToken);
-            var profiles = _mapper.Map<List<UserProfileResponse>>(response);
+            var profiles = _mapper.Map<List<UserProfileResponse>>(response.Payload);
             return Ok(profiles);
         }
 
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> CreateUserProfile([FromBody] UserProfileCreateUpdateCommand profile)
         {
             var command = _mapper.Map<CreateUserCommand>(profile);
             command.UserProfileId = Guid.NewGuid();
             var response = await _mediator.Send(command);
-            var userProfile = _mapper.Map<UserProfileResponse>(response);
+            var userProfile = _mapper.Map<UserProfileResponse>(response.Payload);
 
-            return CreatedAtAction(nameof(GetUserProfileById), new { id = response.Id }, userProfile);
+            return CreatedAtAction(nameof(GetUserProfileById), new { id = userProfile.UserProfileId }, userProfile);
         }
 
         [Route(ApiRoutes.UserProfiles.IdRoute)]
@@ -47,14 +49,17 @@ namespace CWKSOCIAL.API.Controllers.V1
             var query = new GetUserProfileById { Id = Guid.Parse(id) };
             var response = await _mediator.Send(query, cancellationToken);
 
-            if (response == null) return NotFound($"No user with profile ID {id} found");
+            //if (response == null) return NotFound($"No user with profile ID {id} found");
+            if (response.IsError)
+                return HandleErrorResponse(response.Errors);
 
-            var userProfile = _mapper.Map<UserProfileResponse>(response);
+            var userProfile = _mapper.Map<UserProfileResponse>(response.Payload);
             return Ok(userProfile);
         }
 
         [HttpPatch]
         [Route(ApiRoutes.UserProfiles.IdRoute)]
+        [ValidateModel]
         //[ValidateModel]
         //[ValidateGuid("id")]
         public async Task<IActionResult> UpdateUserProfile(string id, UserProfileCreateUpdateCommand updatedProfile,
@@ -78,7 +83,7 @@ namespace CWKSOCIAL.API.Controllers.V1
         {
             var command = new DeleteUserProfileCommand() { UserProfileId = Guid.Parse(id) };
             var response = await _mediator.Send(command);
-            return NoContent();
+            return response.IsError ? HandleErrorResponse(response.Errors) : NoContent();
         }
 
         private readonly IMediator _mediator;
